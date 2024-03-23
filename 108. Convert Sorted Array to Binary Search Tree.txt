@@ -1,0 +1,127 @@
+"108. Convert Sorted Array to Binary Search Tree
+Given an integer array nums where the elements are sorted in ascending order, convert it to a 
+height-balanced
+ binary search tree."
+
+**reqursive solution:**
+
+public class Solution {
+    public TreeNode sortedArrayToBST(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return null;
+        }
+        
+        TreeNode root = buildTree(nums, 0, nums.length - 1);
+        return root;
+    }
+    
+    private TreeNode buildTree(int[] nums, int start, int end) {
+        if (start > end) {
+            return null;
+        }
+        
+        int mid = (start + end) / 2;
+        TreeNode root = new TreeNode(nums[mid]);
+        root.left = buildTree(nums, start, mid - 1);
+        root.right = buildTree(nums, mid + 1, end);
+        return root;
+    }
+}
+
+**iterative solution**
+
+private TreeNode buildTreeIterative(int[] nums, int start, int end) {
+    if (start > end) {
+        return null;
+    }
+
+    Stack<int[]> stack = new Stack<>();
+    stack.push(new int[]{start, end});
+
+    while (!stack.isEmpty()) {
+        int[] range = stack.pop();
+        int mid = (range[0] + range[1]) / 2;
+
+        TreeNode node = new TreeNode(nums[mid]);
+        if (mid > start) {
+            stack.push(new int[]{start, mid - 1});
+            node.left = stack.peek()[1] >= range[0] ? stack.pop()[0] : null; // handle empty right subtree
+        }
+        if (mid < end) {
+            stack.push(new int[]{mid + 1, end});
+            node.right = stack.peek()[0] <= range[1] ? stack.pop()[1] : null; // handle empty left subtree
+        }
+        
+        if (!stack.isEmpty()) {
+            stack.peek()[1] = node.left != null ? node.left.val : mid - 1; // update end index for parent's right subtree
+        }
+    }
+    return node;
+}
+
+
+
+**another iterative solution**
+
+class Solution {
+    public TreeNode sortedArrayToBST(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return null;
+        }
+
+        int[] order = getBalancedInsertionOrder(nums);
+        TreeNode root = null;
+        for (int i : order) {
+            root=insert(root, nums[i]);
+        }
+        return root;
+    }
+
+    public int[] getBalancedInsertionOrder(int[] nums) {
+        int[] order = new int[nums.length];
+        Stack<int[]> stack = new Stack<>();
+        stack.push(new int[]{0, nums.length - 1});
+
+        int index = 0;
+        while (!stack.isEmpty()) {
+            int[] range = stack.pop();
+            int mid = (range[0] + range[1]) / 2;
+
+            order[index++] = mid;
+
+            if (mid + 1 <= range[1]) {
+                stack.push(new int[]{mid + 1, range[1]});
+            }
+            if (mid - 1 >= range[0]) {
+                stack.push(new int[]{range[0], mid - 1});
+            }
+        }
+
+        return order;
+    }
+    public TreeNode insert(TreeNode root,int newVal) {
+        
+        if(root==null){
+            return new TreeNode(newVal);
+        }TreeNode pointer = root;
+
+        while(pointer!=null){
+            if(pointer.val>newVal){
+                if(pointer.left==null){
+                    pointer.left=new TreeNode(newVal);break;}
+                pointer=pointer.left;
+            }
+            else{
+                if(pointer.right==null){
+                    pointer.right=new TreeNode(newVal);break;}
+                    pointer=pointer.right;
+                
+            }
+        }
+        return root;
+    }
+    
+}
+
+
+

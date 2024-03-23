@@ -1,0 +1,65 @@
+Given a binary tree, determine if it is 
+height-balanced
+Height-Balanced
+A height-balanced binary tree is a binary tree in which the depth of the two subtrees of every node never differs by more than one.
+// not mine but for studing, iterative solution.
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public boolean isBalanced(TreeNode root) {
+		ArrayDeque<TreeNode> stack = new ArrayDeque<TreeNode>();
+		TreeNode lastNodeVisited = null;
+		TreeNode curr = root;
+		HashMap<TreeNode, Integer> nodeVsheight = new HashMap<TreeNode, Integer>();
+
+		while (!stack.isEmpty() || curr != null) {
+            //go left until null
+			if (curr != null) {
+				stack.push(curr);
+				curr = curr.left;
+			} 
+            else {//curr == null
+				TreeNode x = stack.peek();//x - > father
+                //go right untill null and not lastNodeVisited
+				if (x.right != null && x.right != lastNodeVisited) {
+					curr = x.right;
+                //==>
+                //go to the innest sub tree
+				} else {
+                    //if a leaf then 0, if sub tree get his max height
+					int lH = x.left != null ? nodeVsheight.remove(x.left) : 0;
+					int rH = x.right != null ? nodeVsheight.remove(x.right) : 0;
+
+                    //check height-balanced
+					if (Math.abs(lH - rH) > 1) {
+						return false;
+					}
+
+                    //put sub tree root ,his max height in the map 
+					int xH = 1 + Math.max(lH, rH);
+					nodeVsheight.put(x, xH);
+
+                    //done with this root of the sub tree
+					stack.pop();
+                    //mark las visited to avoid endless loop
+					lastNodeVisited = x;
+				}
+			}
+		}
+		return true;
+	}
+ 
+}
