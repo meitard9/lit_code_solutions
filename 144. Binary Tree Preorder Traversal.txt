@@ -1,0 +1,62 @@
+144. Binary Tree Preorder Traversal
+Given the root of a binary tree, return the preorder traversal of its nodes' values.
+
+ /**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> preorderList = new ArrayList<>();
+        if (root == null) {
+            return preorderList;
+        }
+
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+
+        while (!stack.isEmpty()) {
+            TreeNode currentNode = stack.pop();
+            preorderList.add(currentNode.val);
+
+            if (currentNode.right != null) {
+                stack.push(currentNode.right); // Push right child first (preorder)
+            }
+            if (currentNode.left != null) {
+                stack.push(currentNode.left);
+            }
+        }
+
+        return preorderList;
+    }
+}
+/*
+Recursive solution:
+public class Solution {
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> preorderList = new ArrayList<>();
+        preorderHelper(root, preorderList);
+        return preorderList;
+    }
+
+    private void preorderHelper(TreeNode root, List<Integer> preorderList) {
+        if (root != null) {
+            // Visit root first (preorder)
+            preorderList.add(root.val);
+            preorderHelper(root.left, preorderList); // Traverse left subtree
+            preorderHelper(root.right, preorderList); // Traverse right subtree
+        }
+    }
+}
+*/
