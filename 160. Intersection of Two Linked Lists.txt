@@ -1,0 +1,61 @@
+160. Intersection of Two Linked Lists
+Given the heads of two singly linked-lists headA and headB, return the node at which the two lists intersect. If the two linked lists have no intersection at all, return null.
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+       /* HashSet<ListNode> map = new HashSet<ListNode>();
+        if(headA == null || headB == null) return null;
+        ListNode a = headA;
+        ListNode b = headB;
+        while(a!=null || b!=null){
+            if(a!=b){
+                if(map.contains(a)) return a;
+                else if(map.contains(b)) return b;
+                else{
+                   
+                   
+                    if(a!=null){
+                         map.add(a);
+                         a=a.next;
+                    }
+                    if(b!=null){
+                         map.add(b);
+                        b=b.next;
+                    }
+                }
+            }
+            else{
+                return a;
+            }
+        }
+        return a;*/
+        
+
+
+        //boundary check
+        if(headA == null || headB == null) return null;
+        
+        ListNode a = headA;
+        ListNode b = headB;
+        
+        //if a & b have different len, then we will stop the loop after second iteration
+        while( a != b){
+            //for the end of first iteration, we just reset the pointer to the head of another linkedlist
+            a = a == null? headB : a.next;
+            b = b == null? headA : b.next;    
+        }
+        
+        return a;
+    }
+}
