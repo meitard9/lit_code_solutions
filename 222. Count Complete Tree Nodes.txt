@@ -1,0 +1,69 @@
+222. Count Complete Tree Nodes
+
+Given the root of a complete binary tree, return the number of the nodes in the tree.
+
+According to Wikipedia, every level, except possibly the last, is completely filled in a complete binary tree, and all nodes in the last level are as far left as possible. It can have between 1 and 2h nodes inclusive at the last level h.
+
+Design an algorithm that runs in less than O(n) time complexity.
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public int countNodes(TreeNode root) {
+        TreeNode curr=root;
+        int height =0;
+        //find heigth
+        while(curr!=null){
+            curr = curr.left;
+            height++;
+        }height--;
+        //binary serach on last level;
+        int fullLevelsSum=(int)Math.pow(2,height)-1;//sum of full tree node with height-1
+        int lastLevelSize=binSearch(root,height)+1;
+        return  fullLevelsSum+lastLevelSize; //binSearch - return the position of the last existing node in the last level, "+1" because position start from 0
+    }
+    public boolean contains(TreeNode root,int pos,int height){
+        TreeNode curr=root;
+        Stack<Integer> stack=new Stack();
+        for(int i=0;i<height;i++){
+            stack.push(pos%2);
+            pos=pos/2;
+        }
+        while(!stack.isEmpty()){
+            int action = stack.pop();//0->left; 1-> right;
+            if(action==0)
+                root=root.left;
+            else root = root.right;
+        }
+        return root!=null;
+    }
+    public int binSearch(TreeNode root,int height){//left==0;right == 2^height
+        int left=0;
+        int right = (int)Math.pow(2,height);
+        int mid=0;
+        
+        while(right>left+1){
+            mid =left+ (right-left)/2;
+            if(contains(root,mid,height)){
+                left=mid;
+            }
+            else{
+                right=mid;
+            }
+        }
+        return left;
+    }
+}
