@@ -1,0 +1,39 @@
+228. Summary Ranges
+You are given a sorted unique integer array nums.
+
+A range [a,b] is the set of all integers from a to b (inclusive).
+
+Return the smallest sorted list of ranges that cover all the numbers in the array exactly. That is, each element of nums is covered by exactly one of the ranges, and there is no integer x such that x is in one of the ranges but not in nums.
+
+Each range [a,b] in the list should be output as:
+
+"a->b" if a != b
+"a" if a == b
+
+class Solution {
+    public List<String> summaryRanges(int[] nums) {
+        List<String> list =new LinkedList<String>();
+        if(nums.length==0) return list;
+        int a=nums[0];
+        int b=a;
+        for(int i=1;i<nums.length;i++){
+            int curr=nums[i];
+            if(0<=curr-b&&curr-b<=1){
+                b=curr;
+            }
+            else{//reset
+                list.add(output(a,b));
+                a=curr;
+                b=curr;
+            }
+        }
+        list.add(output(a,b));//last position
+        return list;
+    }
+    public String output(int a, int b){
+        StringBuilder sb = new StringBuilder();
+        if(a!=b) sb.append(a).append("->").append(b);
+        else sb.append(a);
+        return sb.toString();
+    }
+}
