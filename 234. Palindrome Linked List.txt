@@ -1,0 +1,61 @@
+234. Palindrome Linked List
+Given the head of a singly linked list, return true if it is a 
+palindrome
+ or false otherwise.
+
+ Constraints:
+
+The number of nodes in the list is in the range [1, 105].
+0 <= Node.val <= 9
+ 
+
+Follow up: Could you do it in O(n) time and O(1) space?
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public boolean isPalindrome(ListNode head) {
+        //for reverse
+        ListNode prev =null;
+        ListNode curr =head;
+        ListNode next =head.next;
+        if(next==null) return true;
+
+        //for finding the middle
+        ListNode fast =next;
+
+        //for knowing if odd or double
+        boolean isDouble =false;
+
+        //reverse untill middle.
+        while(fast!=null){
+            curr.next=prev;
+            prev=curr;
+            curr=next;
+            next=next.next;
+
+            //move fast twice.
+            fast=fast.next;
+            if(fast!=null)
+                fast=fast.next;
+            else isDouble=true;
+        }
+        if(isDouble) next=curr;
+        curr=prev;
+        
+        while(curr!=null&&next!=null){
+            if(next.val!=curr.val) return false;
+            curr=curr.next;
+            next=next.next;        
+        }
+        return true;
+    }
+}
