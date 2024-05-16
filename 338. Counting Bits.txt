@@ -1,0 +1,61 @@
+338. Counting Bits
+Given an integer n, return an array ans of length n + 1 such that for each i (0 <= i <= n), ans[i] is the number of 1's in the binary representation of i.
+
+ 
+
+Example 1:
+
+Input: n = 2
+Output: [0,1,1]
+Explanation:
+0 --> 0
+1 --> 1
+2 --> 10
+Example 2:
+
+Input: n = 5
+Output: [0,1,1,2,1,2]
+Explanation:
+0 --> 0
+1 --> 1
+2 --> 10
+3 --> 11
+4 --> 100
+5 --> 101
+ 
+
+Constraints:
+
+0 <= n <= 105
+ 
+
+Follow up:
+
+It is very easy to come up with a solution with a runtime of O(n log n). Can you do it in linear time O(n) and possibly in a single pass?
+Can you do it without using any built-in function (i.e., like __builtin_popcount in C++)?
+
+
+class Solution {
+    public int[] countBits(int n) {
+        int[] ones = new int[n+1];
+        //base cases 1,2;
+        ones[0]=0; //0 <= n 
+        if(n==0) return ones;
+        ones[1]=1;
+        if(n==1) return ones;
+        //
+
+        //n>=2;
+        int pow2 = 2;//inv pow2==flor(log(2,i))
+        int j=0;//inv 0<=j<pow2
+        for(int i=2;i<ones.length;i++){
+            ones[i] = 1 + ones[j];
+            if(j==pow2-1){
+                j=-1;
+                pow2*=2;
+            }
+            j++;
+        }
+        return ones;
+    }
+}
