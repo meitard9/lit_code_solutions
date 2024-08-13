@@ -1,0 +1,114 @@
+463. Island Perimeter
+You are given row x col grid representing a map where grid[i][j] = 1 represents land and grid[i][j] = 0 represents water.
+
+Grid cells are connected horizontally/vertically (not diagonally). The grid is completely surrounded by water, and there is exactly one island (i.e., one or more connected land cells).
+
+The island doesn't have "lakes", meaning the water inside isn't connected to the water around the island. One cell is a square with side length 1. The grid is rectangular, width and height don't exceed 100. Determine the perimeter of the island.
+
+Constraints:
+
+row == grid.length
+col == grid[i].length
+1 <= row, col <= 100
+grid[i][j] is 0 or 1.
+There is exactly one island in grid.
+
+class Solution {
+    public int islandPerimeter(int[][] grid) {
+        //first - frute force find the "root"
+        Pair<Integer,Integer> root=findRoot(grid);
+        if (root == null) return 0; 
+        //second - using bfs with Pairs go over every rectangulars in the island
+        // and count them and count the number of connection
+        //return (number of rectangulars)*4 -2*(number of connections)
+        return perimeter(grid,root);
+    }
+    public Pair<Integer,Integer> findRoot(int[][] grid){
+        int row = grid.length;
+        int col = grid[0].length;
+        for(int x=0;x<row;x++){
+            for(int y=0;y<col;y++){
+                if(grid[x][y]==1)
+                    return new Pair(x,y);
+            }
+        }
+        //nothing to do if not found
+        return null;
+    }
+    public boolean isVisited(int[][] grid,Pair<Integer,Integer> pos){
+        return grid[pos.getKey()][pos.getValue()]==-1;
+    }
+    public boolean isNode(int[][] grid,Pair<Integer,Integer> pos){
+        return grid[pos.getKey()][pos.getValue()]==1 || isVisited(grid,pos);
+    }
+    public void setVisited(int[][] grid,Pair<Integer,Integer> pos){
+        grid[pos.getKey()][pos.getValue()]=-1;
+    }
+    public List<Pair<Integer,Integer>> getNeighbors(int[][] grid,Pair<Integer,Integer> p){
+        List<Pair<Integer,Integer>> all= new LinkedList();
+        all.add(getNeighbor(p,1,0));
+        all.add(getNeighbor(p,-1,0));
+        all.add(getNeighbor(p,0,1));
+        all.add(getNeighbor(p,0,-1));
+        return all.stream().filter(pos -> isValid(grid,pos)&&isNode(grid,pos)).collect(Collectors.toList());
+    }
+    public Pair<Integer,Integer> getNeighbor(Pair<Integer,Integer> p,int x,int y){
+        return new Pair(p.getKey()+x, p.getValue()+y);
+    }
+    public boolean isValid(int[][] grid, Pair<Integer,Integer> p){
+        return p.getKey()>=0 & p.getValue()>=0 & p.getKey()<grid.length & p.getValue()<grid[0].length;
+    }
+    public int perimeter(int[][] grid,Pair<Integer,Integer> root){
+        int recNum=0;//number of rectangulars
+        int conNum=0;//number of connections
+        int x = root.getKey();
+        int y = root.getValue();
+
+        // Create a queue for BFS
+        Queue<Pair<Integer, Integer>> q = new LinkedList<>();
+
+        grid[x][y]=-1;//mark as visited
+        q.offer(new Pair<>(x,y));// enqueue it
+        recNum++;
+
+        // Iterate over the queue
+        while (!q.isEmpty()) {     
+            // Dequeue a vertex from queue
+            Pair<Integer, Integer> curr = q.poll();
+
+            // Get all adjacent vertices of the dequeued 
+            // vertex. If an adjacent has not been visited, 
+            // mark it visited and enqueue it
+            for(Pair<Integer,Integer> p :getNeighbors(grid,curr)){
+                conNum++;
+                if(!isVisited(grid,p)){
+                    setVisited(grid,p);
+                    q.offer(p);
+                    recNum++;
+                }
+            }
+
+        }
+        return 4*recNum - conNum;//conNum is count twice so no need to double it.
+    }
+}
+
+
+
+public class Solution {
+    public int islandPerimeter(int[][] grid) {
+        int islands = 0, neighbours = 0;
+
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                if (grid[i][j] == 1) {
+                    islands++; // count islands
+                    if (i < grid.length - 1 && grid[i + 1][j] == 1) neighbours++; // count down neighbours
+                    if (j < grid[i].length - 1 && grid[i][j + 1] == 1) neighbours++; // count right neighbours
+                }
+            }
+        }
+
+        return islands * 4 - neighbours * 2;
+    }
+}
