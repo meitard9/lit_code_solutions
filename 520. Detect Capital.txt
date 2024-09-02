@@ -1,0 +1,45 @@
+520. Detect Capital
+We define the usage of capitals in a word to be right when one of the following cases holds:
+
+All letters in this word are capitals, like "USA".
+All letters in this word are not capitals, like "leetcode".
+Only the first letter in this word is capital, like "Google".
+Given a string word, return true if the usage of capitals in it is right.
+
+ 
+
+Example 1:
+
+Input: word = "USA"
+Output: true
+Example 2:
+
+Input: word = "FlaG"
+Output: false
+ 
+
+Constraints:
+
+1 <= word.length <= 100
+word consists of lowercase and uppercase English letters.
+
+class Solution {
+    public boolean detectCapitalUse(String word) {
+        /*  Time O(n + 4);
+            Space O(n + 6?)
+            
+        */
+        char[] wordArr = word.toCharArray();
+        int sumOfCap = 0;
+        for(char letter: wordArr){
+            if(Character.isUpperCase(letter))
+                sumOfCap++;
+        }
+
+        boolean isAllCap = sumOfCap == wordArr.length;
+        boolean isFirstCap = Character.isUpperCase(wordArr[0]);
+        boolean isOneCap = sumOfCap == 1;
+        boolean isNoCap = sumOfCap == 0;
+        return isAllCap || isNoCap || (isOneCap && isFirstCap);
+    }
+}
