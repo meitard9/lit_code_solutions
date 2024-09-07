@@ -1,0 +1,63 @@
+628. Maximum Product of Three Numbers
+Given an integer array nums, find three numbers whose product is maximum and return the maximum product.
+
+ 
+
+Example 1:
+
+Input: nums = [1,2,3]
+Output: 6
+Example 2:
+
+Input: nums = [1,2,3,4]
+Output: 24
+Example 3:
+
+Input: nums = [-1,-2,-3]
+Output: -6
+ 
+
+Constraints:
+
+3 <= nums.length <= 104
+-1000 <= nums[i] <= 1000
+
+class Solution {
+    public int maximumProduct(int[] nums) {
+        int num1 = Integer. MIN_VALUE;
+        int num2 = Integer. MIN_VALUE;
+        int num3 = Integer. MIN_VALUE;
+        int negNum1 = 0;
+        int negNum2 = 0;
+        for(int i = 0; i < nums.length; i++){
+            int curr = nums[i];
+
+            if(curr > num3){
+                num1 = num2;
+                num2 = num3;
+                num3 = curr;
+
+            }else if(curr > num2){
+                num1 = num2;
+                num2 = curr;
+            }else if(curr > num1){
+                num1 = curr;
+            }
+            if(curr < negNum2){
+                negNum1 = negNum2;
+                negNum2 = curr;
+            }else if(curr < negNum1){
+                negNum1 = curr;
+            }
+        }
+
+
+        if(num3 > 0 && negNum1 * negNum2 > num1 * num2){
+            num1 = negNum1;
+            num2 = negNum2;
+        }
+
+        return num1 * num2 * num3;
+        
+    }
+}
